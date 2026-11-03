@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizOne - Learn Smarter. Practice Better. Improve Faster.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="hidden">
+        <div id="confirmation-modal" class="modal card">
+            <h3 id="modal-title">Confirm Action</h3>
+            <p id="modal-message">Are you sure you want to proceed?</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth View (Login/Signup) -->
+    <div id="auth-view" class="auth-container">
+        <div class="auth-left">
+            <div class="auth-branding">
+                <i data-lucide="brain-circuit" class="logo-icon"></i>
+                <h1>QuizOne</h1>
+            </div>
+            <h2>Your Smarter Way to Learn.</h2>
+            <p>Practice better, track your progress, and improve faster with our comprehensive educational platform.</p>
+            <ul class="feature-list">
+                <li><i data-lucide="check-circle-2"></i> Custom AI-styled Quiz Generation</li>
+                <li><i data-lucide="check-circle-2"></i> In-depth Performance Analytics</li>
+                <li><i data-lucide="check-circle-2"></i> Smart Study Planner</li>
+                <li><i data-lucide="check-circle-2"></i> Interactive Mock Tests</li>
+            </ul>
+            <div class="auth-illustration"></div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-form-container card">
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <h3>Welcome Back</h3>
+                    <p class="text-muted">Enter your details to access your account.</p>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="mail"></i>
+                            <input type="email" id="login-email" required placeholder="student@college.edu">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="lock"></i>
+                            <input type="password" id="login-password" required placeholder="••••••••">
+                            <button type="button" class="icon-btn toggle-password"><i data-lucide="eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label"><input type="checkbox" id="remember-me"> Remember me</label>
+                        <a href="#" id="forgot-password" class="text-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                    <div class="divider"><span>OR</span></div>
+                    <button type="button" id="demo-login-btn" class="btn btn-accent btn-block">Explore</button>
+                    <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Create one</a></p>
+                </form>
+
+                <!-- Signup Form -->
+                <form id="signup-form" class="auth-form hidden">
+                    <h3>Create Account</h3>
+                    <p class="text-muted">Start your learning journey today.</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="signup-name" required placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="signup-email" required placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signup-password" required placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="signup-confirm" required placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label>College Name</label>
+                            <input type="text" id="signup-college" required placeholder="University Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Course</label>
+                            <input type="text" id="signup-course" required placeholder="Computer Science">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-4">Sign Up</button>
+                    <p class="auth-switch">Already have an account? <a href="#" id="show-login">Log in</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application View -->
+    <div id="app-view" class="app-container hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i data-lucide="brain-circuit" class="logo-icon text-primary"></i>
+                <h2 class="brand-text">QuizOne</h2>
+                <button id="mobile-menu-close" class="icon-btn mobile-only"><i data-lucide="x"></i></button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="#" class="nav-item" data-target="quiz-gen"><i data-lucide="sparkles"></i> AI Quiz Generator</a>
+                <a href="#" class="nav-item" data-target="study-assistant"><i data-lucide="message-square"></i> AI Study Assistant</a>
+                <a href="#" class="nav-item" data-target="analytics"><i data-lucide="pie-chart"></i> Performance & Analytics</a>
+                <a href="#" class="nav-item" data-target="planner"><i data-lucide="calendar"></i> AI Study Planner</a>
+                <a href="#" class="nav-item" data-target="library"><i data-lucide="library"></i> Study Materials</a>
+                <a href="#" class="nav-item" data-target="my-quizzes"><i data-lucide="history"></i> My Quizzes</a>
+                <a href="#" class="nav-item" data-target="mock-tests"><i data-lucide="clipboard-list"></i> Mock Tests</a>
+                <a href="#" class="nav-item" data-target="bookmarks"><i data-lucide="bookmark"></i> Bookmarks</a>
+                <a href="#" class="nav-item" data-target="profile"><i data-lucide="user"></i> My Profile</a>
+                <a href="#" class="nav-item" data-target="settings"><i data-lucide="settings"></i> Settings</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item text-danger" id="logout-btn"><i data-lucide="log-out"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="mobile-menu-open" class="icon-btn mobile-only"><i data-lucide="menu"></i></button>
+                    <h2 id="page-title">Dashboard</h2>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-bar hidden-mobile">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <button class="icon-btn"><i data-lucide="bell"></i></button>
+                    <div class="user-profile-sm" id="topbar-user">
+                        <div class="avatar">JD</div>
+                        <span id="topbar-name">John Doe</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="content-wrapper">
+                
+                <!-- 1. Dashboard -->
+                <section id="view-dashboard" class="view active">
+                    <div class="welcome-banner card bg-gradient">
+                        <div>
+                            <h1 id="dash-welcome">Welcome back, Student!</h1>
+                            <p id="dash-date">Today is a great day to learn.</p>
+                            <div class="study-goal mt-4">
+                                <span>Today's Goal: 2 Quizzes</span>
+                                <div class="progress-bar-container"><div class="progress-bar bg-accent" id="goal-progress" style="width: 50%;"></div></div>
+                            </div>
+                        </div>
+                        <div class="banner-illustration"><i data-lucide="rocket" size="80" class="text-accent opacity-50"></i></div>
+                    </div>
+                    
+                    <div class="stats-grid mt-4">
+                        <div class="stat-card card">
+                            <div class="stat-icon bg-primary-light"><i data-lucide="target" class="text-primary"></i></div>
+                            <div class="stat-details"><h3>Total Quizzes</h3><p id="stat-total-quizzes">0</p></div>
+                        </div>
+                        <div class="stat-card card">
+                            <div class="stat-icon bg-secondary-light"><i data-lucide="bar-chart-2" class="text-secondary"></i></div>
+                            <div class="stat-details"><h3>Avg. Score</h3><p id="stat-avg-score">0%</p></div>
+                        </div>
+                        <div class="stat-card card">
+                            <div class="stat-icon bg-mint-light"><i data-lucide="award" class="text-mint"></i></div>
+                            <div class="stat-details"><h3>Best Score</h3><p id="stat-best-score">0%</p></div>
+                        </div>
+                        <div class="stat-card card">
+                            <div class="stat-icon bg-accent-light"><i data-lucide="clock" class="text-accent"></i></div>
+                            <div class="stat-details"><h3>Exam Countdown</h3><p id="stat-exam-days">No Exam Set</p></div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-split mt-4">
+                        <div class="card flex-2">
+                            <div class="card-header">
+                                <h3>Weekly Performance</h3>
+                            </div>
+                            <div class="chart-container"><canvas id="dash-chart"></canvas></div>
+                        </div>
+                        <div class="card flex-1">
+                            <div class="card-header">
+                                <h3>Recent Activity</h3>
+                                <button class="btn btn-sm btn-outline" onclick="app.navigate('my-quizzes')">View All</button>
+                            </div>
+                            <div id="dash-recent-list" class="recent-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. AI Quiz Generator (Setup) -->
+                <section id="view-quiz-gen" class="view hidden">
+                    <div class="card max-w-3xl mx-auto">
+                        <div class="card-header border-bottom pb-4 mb-4">
+                            <h2><i data-lucide="sparkles" class="text-primary inline-icon"></i> AI Quiz Generator</h2>
+                            <p class="text-muted">Configure your practice session. (Demo mode uses preloaded question bank)</p>
+                        </div>
+                        <form id="quiz-gen-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    <select id="qg-subject" required>
+                                        <option value="">Select Subject</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="Physics">Physics</option>
+                                        <option value="Chemistry">Chemistry</option>
+                                        <option value="English">English</option>
+                                        <option value="General Knowledge">General Knowledge</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Topic</label>
+                                    <input type="text" id="qg-topic" placeholder="e.g. Algebra, HTML Basics" list="qg-topic-list" required>
+                                    <datalist id="qg-topic-list"></datalist>
+                                </div>
+                                <div class="form-group">
+                                    <label>Difficulty</label>
+                                    <select id="qg-difficulty" required>
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Number of Questions</label>
+                                    <select id="qg-count" required>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions mt-6 flex gap-4">
+                                <button type="reset" class="btn btn-outline flex-1">Reset</button>
+                                <button type="submit" class="btn btn-primary flex-2"><i data-lucide="zap"></i> Generate & Start Quiz</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- 2.5 Active Quiz Interface -->
+                <section id="view-quiz-active" class="view hidden">
+                    <div class="quiz-header card mb-4 flex-row justify-between items-center">
+                        <div>
+                            <h2 id="qa-title">Quiz Title</h2>
+                            <p class="text-muted text-sm"><span id="qa-meta">Subject | Topic | Difficulty</span></p>
+                        </div>
+                        <div class="quiz-timer bg-accent-light text-accent-dark">
+                            <i data-lucide="timer"></i> <span id="qa-timer">10:00</span>
+                        </div>
+                    </div>
+                    <div class="quiz-layout">
+                        <div class="quiz-main card">
+                            <div class="flex-row justify-between mb-4">
+                                <span class="badge bg-primary-light text-primary">Question <span id="qa-current-num">1</span> of <span id="qa-total-num">10</span></span>
+                                <button id="qa-bookmark-btn" class="icon-btn" title="Bookmark Question"><i data-lucide="bookmark"></i></button>
+                            </div>
+                            <h3 id="qa-question-text" class="mb-6 text-lg">Question text goes here?</h3>
+                            <div id="qa-options" class="options-grid">
+                                <!-- Options rendered by JS -->
+                            </div>
+                            <div class="quiz-controls mt-8 flex-row justify-between">
+                                <button id="qa-prev" class="btn btn-outline"><i data-lucide="arrow-left"></i> Previous</button>
+                                <button id="qa-next" class="btn btn-primary">Next <i data-lucide="arrow-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="quiz-sidebar card">
+                            <h3>Question Palette</h3>
+                            <div id="qa-palette" class="palette-grid mt-4">
+                                <!-- Palette buttons rendered by JS -->
+                            </div>
+                            <button id="qa-submit" class="btn btn-accent btn-block mt-6">Submit Quiz</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2.6 Quiz Result Interface -->
+                <section id="view-quiz-result" class="view hidden">
+                    <div class="result-header text-center mb-8">
+                        <div class="score-circle mx-auto">
+                            <h1 id="qr-score">80%</h1>
+                            <p>Accuracy</p>
+                        </div>
+                        <h2 class="mt-4" id="qr-message">Great Job!</h2>
+                        <p class="text-muted" id="qr-summary">You scored X out of Y in Z minutes.</p>
+                    </div>
+                    <div class="stats-grid mb-8 max-w-4xl mx-auto">
+                        <div class="stat-card card text-center"><h3 class="text-primary text-2xl" id="qr-correct">0</h3><p>Correct</p></div>
+                        <div class="stat-card card text-center"><h3 class="text-danger text-2xl" id="qr-incorrect">0</h3><p>Incorrect</p></div>
+                        <div class="stat-card card text-center"><h3 class="text-muted text-2xl" id="qr-unanswered">0</h3><p>Unanswered</p></div>
+                        <div class="stat-card card text-center"><h3 class="text-secondary text-2xl" id="qr-time">0:00</h3><p>Time Taken</p></div>
+                    </div>
+                    <div class="text-center mb-8 gap-4 flex justify-center">
+                        <button class="btn btn-primary" onclick="app.navigate('dashboard')">Return to Dashboard</button>
+                        <button class="btn btn-outline" onclick="app.navigate('quiz-gen')">Generate Another</button>
+                    </div>
+                    <div class="card max-w-4xl mx-auto">
+                        <h3 class="mb-4">Question Review</h3>
+                        <div id="qr-review-list" class="review-list">
+                            <!-- Review items rendered by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. AI Study Assistant -->
+                <section id="view-study-assistant" class="view hidden h-full">
+                    <div class="chat-container card h-full flex-col">
+                        <div class="chat-header border-bottom pb-4 mb-4 flex-row justify-between items-center">
+                            <div class="flex-row gap-3 items-center">
+                                <div class="bot-avatar bg-mint"><i data-lucide="bot"></i></div>
+                                <div>
+                                    <h3 class="m-0">AI Study Assistant <span class="badge bg-accent-light text-accent-dark text-xs ml-2">DEMO</span></h3>
+                                    <p class="text-muted text-sm m-0">Ask me academic questions!</p>
+                                </div>
+                            </div>
+                            <button id="chat-clear-btn" class="btn btn-sm btn-outline"><i data-lucide="trash-2"></i> Clear Chat</button>
+                        </div>
+                        <div id="chat-messages" class="chat-messages flex-1 overflow-y-auto p-4 mb-4">
+                            <!-- Messages rendered by JS -->
+                        </div>
+                        <div class="chat-suggestions flex gap-2 mb-4 overflow-x-auto pb-2" id="chat-suggestions">
+                            <button class="badge bg-secondary-light text-secondary cursor-pointer">Explain Newton's Laws</button>
+                            <button class="badge bg-secondary-light text-secondary cursor-pointer">What is HTML?</button>
+                            <button class="badge bg-secondary-light text-secondary cursor-pointer">Solve quadratic equation</button>
+                        </div>
+                        <form id="chat-form" class="chat-input-area flex gap-2">
+                            <input type="text" id="chat-input" class="flex-1" placeholder="Type your academic question here..." required>
+                            <button type="submit" class="btn btn-primary icon-btn"><i data-lucide="send"></i></button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- 4. Performance & Analytics -->
+                <section id="view-analytics" class="view hidden">
+                    <h2 class="mb-6">Performance & Analytics</h2>
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div class="card">
+                            <h3 class="mb-4">Accuracy Overview</h3>
+                            <div class="chart-container" style="height: 250px;"><canvas id="chart-accuracy"></canvas></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="mb-4">Scores Trend</h3>
+                            <div class="chart-container" style="height: 250px;"><canvas id="chart-trend"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="mb-4">Subject-wise Performance</h3>
+                        <div class="chart-container" style="height: 300px;"><canvas id="chart-subjects"></canvas></div>
+                    </div>
+                </section>
+
+                <!-- 5. AI Study Planner -->
+                <section id="view-planner" class="view hidden">
+                    <div class="flex-row justify-between mb-6">
+                        <h2>Study Planner</h2>
+                        <button class="btn btn-primary" id="btn-new-plan"><i data-lucide="plus"></i> Create Plan</button>
+                    </div>
+                    <div id="planner-form-container" class="card mb-6 hidden">
+                        <h3 class="mb-4">New Study Plan</h3>
+                        <form id="planner-form">
+                            <div class="form-grid">
+                                <div class="form-group"><label>Exam Name</label><input type="text" id="plan-exam" required></div>
+                                <div class="form-group"><label>Subject</label><input type="text" id="plan-subject" required></div>
+                                <div class="form-group"><label>Exam Date</label><input type="date" id="plan-date" required></div>
+                                <div class="form-group"><label>Daily Target (hrs)</label><input type="number" id="plan-hrs" min="1" max="12" required></div>
+                            </div>
+                            <div class="form-group mt-4">
+                                <label>Topics (comma separated)</label>
+                                <textarea id="plan-topics" required placeholder="Algebra, Geometry, Trigonometry"></textarea>
+                            </div>
+                            <div class="flex gap-4 mt-4">
+                                <button type="button" class="btn btn-outline flex-1" onclick="document.getElementById('planner-form-container').classList.add('hidden')">Cancel</button>
+                                <button type="submit" class="btn btn-primary flex-2">Generate Demo Plan</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="plans-list" class="grid grid-cols-2 gap-6">
+                        <!-- Plans rendered by JS -->
+                    </div>
+                </section>
+
+                <!-- 6. Study Materials -->
+                <section id="view-library" class="view hidden">
+                    <div class="flex-row justify-between mb-6">
+                        <h2>Study Materials Library</h2>
+                        <button class="btn btn-primary" id="btn-add-material"><i data-lucide="upload"></i> Add Material</button>
+                    </div>
+                    <div id="material-form-container" class="card mb-6 hidden">
+                        <form id="material-form">
+                            <div class="form-grid">
+                                <div class="form-group"><label>Title</label><input type="text" id="mat-title" required></div>
+                                <div class="form-group"><label>Subject</label><input type="text" id="mat-subject" required></div>
+                                <div class="form-group"><label>Category</label><select id="mat-cat"><option value="Notes">Notes</option><option value="PDF">PDF Reference</option><option value="Link">Link</option></select></div>
+                                <div class="form-group"><label>File/Link (Demo Meta only)</label><input type="text" id="mat-link" placeholder="Filename or URL" required></div>
+                            </div>
+                            <div class="flex gap-4 mt-4">
+                                <button type="button" class="btn btn-outline flex-1" onclick="document.getElementById('material-form-container').classList.add('hidden')">Cancel</button>
+                                <button type="submit" class="btn btn-primary flex-1">Save MetaData</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="filters mb-6 flex gap-4">
+                        <input type="text" id="lib-search" placeholder="Search materials..." class="form-control max-w-sm">
+                        <select id="lib-filter-sub" class="form-control w-auto"><option value="All">All Subjects</option></select>
+                    </div>
+                    <div id="library-list" class="grid grid-cols-3 gap-4">
+                        <!-- Materials rendered by JS -->
+                    </div>
+                </section>
+
+                <!-- 7. My Quizzes -->
+                <section id="view-my-quizzes" class="view hidden">
+                    <h2>My Quizzes History</h2>
+                    <div class="card mt-6 overflow-x-auto">
+                        <table class="data-table w-full">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject</th>
+                                    <th>Topic</th>
+                                    <th>Difficulty</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body">
+                                <!-- Rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 8. Mock Tests -->
+                <section id="view-mock-tests" class="view hidden">
+                    <div class="flex-row justify-between mb-6">
+                        <h2>Mock Tests</h2>
+                        <span class="badge bg-accent-light text-accent-dark">Demo Environment</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6" id="mock-test-list">
+                        <!-- Rendered by JS -->
+                    </div>
+                </section>
+
+                <!-- 9. Bookmarks -->
+                <section id="view-bookmarks" class="view hidden">
+                    <h2>Bookmarks</h2>
+                    <div class="card mt-6">
+                        <div id="bookmarks-list" class="review-list">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. My Profile -->
+                <section id="view-profile" class="view hidden">
+                    <div class="max-w-2xl mx-auto card">
+                        <h2 class="mb-6 border-bottom pb-4">My Profile</h2>
+                        <form id="profile-form">
+                            <div class="profile-header flex items-center gap-6 mb-6">
+                                <div class="avatar-lg bg-primary text-white text-2xl flex items-center justify-center rounded-full w-24 h-24" id="prof-avatar-display">JD</div>
+                                <div>
+                                    <h3 id="prof-name-display">John Doe</h3>
+                                    <p class="text-muted" id="prof-email-display">student@college.edu</p>
+                                </div>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Full Name</label><input type="text" id="prof-name" required></div>
+                                <div class="form-group"><label>Email</label><input type="email" id="prof-email" required readonly class="bg-gray-100"></div>
+                                <div class="form-group"><label>College</label><input type="text" id="prof-college"></div>
+                                <div class="form-group"><label>Course</label><input type="text" id="prof-course"></div>
+                                <div class="form-group"><label>Department</label><input type="text" id="prof-dept"></div>
+                                <div class="form-group"><label>Academic Year</label><input type="text" id="prof-year"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-6">Save Changes</button>
+                        </form>
+                    </div>
+                </section> 
+
+                <!-- 11. Settings -->
+                <section id="view-settings" class="view hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="card mb-6">
+                            <h3 class="mb-4 border-bottom pb-2">Preferences</h3>
+                            <div class="form-group flex justify-between items-center mb-4">
+                                <div><strong>Dark Mode</strong><p class="text-sm text-muted m-0">Toggle dark theme (Demo visual only)</p></div>
+                                <label class="switch"><input type="checkbox" id="theme-toggle"><span class="slider round"></span></label>
+                            </div>
+                            <div class="form-group flex justify-between items-center">
+                                <div><strong>Email Notifications</strong><p class="text-sm text-muted m-0">Receive study reminders</p></div>
+                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                            </div>
+                        </div>
+                        <div class="card border-danger border-2">
+                            <h3 class="text-danger mb-4 border-bottom pb-2">Danger Zone</h3>
+                            <p class="mb-4">Clearing data will remove all your quiz attempts, plans, bookmarks, and settings from this browser.</p>
+                            <button id="btn-clear-data" class="btn btn-outline text-danger border-danger">Clear All Demo Data</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
